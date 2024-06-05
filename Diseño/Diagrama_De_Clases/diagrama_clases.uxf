@@ -1,0 +1,182 @@
+<diagram program="umletino" version="15.1"><zoom_level>10</zoom_level><help_text>Space for diagram notes</help_text><element><id>UMLClass</id><coordinates><x>190</x><y>850</y><w>230</w><h>190</h></coordinates><panel_attributes>Client
+--
+- pedidos_realizados: list[Pedido]
+- client_id: String
+- registrado: boolean
+- user: String 
+- password: String
+
+--
++ registrarCliente ()
++ isRegistrado ()
++ realizarPedido (pedido: Pedido)
++ imprimir_pedidos (pedidos: String)
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>940</x><y>740</y><w>470</w><h>270</h></coordinates><panel_attributes>Controller
+--
+- pedidos_realizados: list[Pedido]
+- clientes_registrados: list[Client]
+
+--
++ registrarCliente (message: String): Client
++ loginCliente (user: String, password: String): Boolean
++ realizarPedido (message: String): Pedido
++ setEstadoPedido (id_pedido: String, estado: EnumEstadosPedido): Boolean
++ cancelarPedido (id_pedido: String): Boolean
++ verPedidos (id_cliente: String): list[Pedido]
++ serialize_clients_and_orders()
++ getClientFromClientId (client_id: String): Client
++ getClientIdFromUser (user: String): String
++ isClienteRegistrado (user: String): Boolean
++ getPedidoFromId (id_pedido: String): Pedido
++ containsPedido (id_pedido: String): Boolean
+
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1920</x><y>720</y><w>230</w><h>100</h></coordinates><panel_attributes>Delivery
+--
+- p_entrega: Double
+
+--
++ entregarPedido (): Boolean
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>870</x><y>1180</y><w>390</w><h>170</h></coordinates><panel_attributes>Pedido
+--
+- product_ids: []
+- id_pedido: String
+- client_id: String
+
+--
++ cancelarPedido (): Boolean
++ sePuedeCancelarPedido (estado: EnumEstadosPedido): Boolean
++ sePuedeProcesarElPedido (): Boolean
++ to_dict(): dict {id_pedido, client_id, product_ids, estadoPedido}
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>570</x><y>1180</y><w>170</w><h>170</h></coordinates><panel_attributes>&lt;&lt;Enum&gt;&gt;
+EnumEstadosPedido
+--
++ EN_ALMACEN
++ EN_PREPARACION
++ EN_CINTA
++ EN_RUTA
++ ENTREGADO
+
++ ERROR
++ CANCELADO
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1880</x><y>1180</y><w>330</w><h>110</h></coordinates><panel_attributes>Robot
+--
+- tiempo_trabajo: int
+- p_almacen: Double
+
+--
++ realizarTrabajo (json_message: String): (Boolean, [])</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>880</x><y>0</y><w>590</w><h>330</h></coordinates><panel_attributes>SaimazoonClient
+--
+- user: String
+- password: String 
+- loggedin: Boolean
+
+- connection: Connection
+- channel: Channel
+- callback_queue: String
+- corr_id: String 
+- response: String
+
+--
++ on_response (ch: Channel, method: Basic.Deliver, properties: BasicProperties, body: bytes)
++ send_to_controller (message: String)
++ registrar_cliente ()
++ hacer_pedido (producto: String)
++ ver_pedidos ()
++ cancelar_pedido (id_pedido: String)
++ manejar_solicitudes ()
++ main ()
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>0</x><y>480</y><w>590</w><h>270</h></coordinates><panel_attributes>LaunchClient
+--
+- user_register: Client
+- user_login: Client
+- client_id: String
+
+- connection: Connection
+- channel: Channel
+- callback_queue: String
+- corr_id: String 
+
+--
++ on_response (ch: Channel, method: Basic.Deliver, properties: BasicProperties, body: bytes)
++ call (message: String)
++ register ()
++ login ()
++ hacer_pedido ()
++ ver_pedido ()
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1740</x><y>480</y><w>590</w><h>140</h></coordinates><panel_attributes>LaunchDelivery
+--
+- connection: Connection
+- channel: Channel
+
+
+--
++ callback (ch: Channel, method: Basic.Deliver, properties: BasicProperties, body: bytes)
++ consume ()</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>870</x><y>480</y><w>590</w><h>160</h></coordinates><panel_attributes>LaunchController
+--
+- connection: Connection
+- channel: Channel
+
+--
++ on_request (ch: Channel, method: Basic.Deliver, properties: BasicProperties, body: bytes)
++ callback_robots (ch: Channel, method: Basic.Deliver, properties: BasicProperties, body: bytes)
++ callback_repartidores (ch: Channel, method: Basic.Deliver, properties: BasicProperties, body: bytes)
++ consume ()</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1730</x><y>940</y><w>590</w><h>140</h></coordinates><panel_attributes>LaunchRobot
+--
+- connection: Connection
+- channel: Channel
+
+
+--
++ callback (ch: Channel, method: Basic.Deliver, properties: BasicProperties, body: bytes)
++ consume ()</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>730</x><y>1250</y><w>160</w><h>40</h></coordinates><panel_attributes>lt=&lt;-
+estadoPedido</panel_attributes><additional_attributes>140;20;10;20</additional_attributes></element><element><id>Relation</id><coordinates><x>1170</x><y>630</y><w>80</w><h>130</h></coordinates><panel_attributes>lt=&lt;-
+m1=controller
+m2=
+</panel_attributes><additional_attributes>10;110;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>2010</x><y>610</y><w>80</w><h>130</h></coordinates><panel_attributes>lt=&lt;-
+m1=repartidor
+m2=
+</panel_attributes><additional_attributes>10;110;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>2030</x><y>1070</y><w>60</w><h>130</h></coordinates><panel_attributes>lt=&lt;-
+m1=robot
+m2=
+</panel_attributes><additional_attributes>10;110;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>290</x><y>740</y><w>60</w><h>130</h></coordinates><panel_attributes>lt=&lt;-
+m1=client
+m2=
+</panel_attributes><additional_attributes>10;110;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>1120</x><y>1000</y><w>130</w><h>200</h></coordinates><panel_attributes>lt=&lt;-&gt;&gt;&gt;&gt;&gt;
+m1=1..*
+m2=
+pedidos_realizados
+</panel_attributes><additional_attributes>10;180;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>410</x><y>1030</y><w>480</w><h>170</h></coordinates><panel_attributes>lt=&lt;-&gt;&gt;&gt;&gt;&gt;
+m1=1..*
+m2=
+pedidos_realizados
+</panel_attributes><additional_attributes>460;150;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>410</x><y>900</y><w>550</w><h>50</h></coordinates><panel_attributes>lt=&lt;-&gt;&gt;&gt;&gt;&gt;
+m1=1..*
+m2=
+clientes_registrados
+</panel_attributes><additional_attributes>10;20;530;20</additional_attributes></element><element><id>Relation</id><coordinates><x>580</x><y>550</y><w>310</w><h>60</h></coordinates><panel_attributes>lt=&lt;.&gt;
+
+
+2321_04_rpc_queue</panel_attributes><additional_attributes>10;20;290;20</additional_attributes></element><element><id>Relation</id><coordinates><x>1170</x><y>320</y><w>140</w><h>180</h></coordinates><panel_attributes>lt=&lt;.&gt;
+
+
+2321_04_rpc_queue</panel_attributes><additional_attributes>10;10;10;160</additional_attributes></element><element><id>Relation</id><coordinates><x>1450</x><y>490</y><w>310</w><h>80</h></coordinates><panel_attributes>lt=&lt;.
+
+
+2321_04_controlador_repartidores_queue
+</panel_attributes><additional_attributes>290;20;10;20</additional_attributes></element><element><id>Relation</id><coordinates><x>1450</x><y>550</y><w>310</w><h>80</h></coordinates><panel_attributes>lt=.&gt;
+
+
+2321_04_repartidores_controlador_queue
+</panel_attributes><additional_attributes>290;20;10;20</additional_attributes></element><element><id>Relation</id><coordinates><x>1450</x><y>630</y><w>420</w><h>330</h></coordinates><panel_attributes>lt=.&gt;
+
+
+2321_04_robots_controlador_queue
+</panel_attributes><additional_attributes>390;310;390;50;10;50;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>1370</x><y>630</y><w>380</w><h>400</h></coordinates><panel_attributes>lt=&lt;.
+
+
+2321_04_controlador_robots_queue
+</panel_attributes><additional_attributes>360;380;120;380;120;80;10;80;10;10</additional_attributes></element><element><id>UMLNote</id><coordinates><x>570</x><y>310</y><w>270</w><h>120</h></coordinates><panel_attributes>NOTA: 
+Las flechas punteadas representan
+las colas empleadas para la 
+comunicacion entre los 
+diferentes componentes</panel_attributes><additional_attributes></additional_attributes></element></diagram>
